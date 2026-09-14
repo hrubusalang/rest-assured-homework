@@ -1,35 +1,36 @@
 package api;
 
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.empty;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 
-import io.restassured.response.Response;
+class GoodsListTest extends ApiBaseTest {
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Tag;
-
-class GoodsListTest {
-
-    @Tag("api")
     @Test
+    @Tag("api")
     void getGoodsList() {
+
+        createProduct("Хлеб", 50);
+
         given()
                 .baseUri("http://localhost:8080")
                 .when()
                 .get("/goods/list")
                 .then()
                 .statusCode(200)
-                .body("goods", empty());
+                .body("goods.name", hasItem("Хлеб"));
     }
 
-    @Tag("api")
     @Test
+    @Tag("api")
     void getGoodsListReqSpec() {
+
+        createProduct("Слива", 150);
 
         RequestSpecification requestSpecification = given()
                 .baseUri("http://localhost:8080");
@@ -39,28 +40,14 @@ class GoodsListTest {
                 .get("/goods/list")
                 .then()
                 .statusCode(200)
-                .body("goods", empty());
+                .body("goods.name", hasItem("Слива"));
     }
 
-    @Tag("api")
     @Test
+    @Tag("api")
     void addProduct() {
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .contentType("application/json")
-                .body("""
-                    {
-                      "name": "Test product 2",
-                      "price": 100
-                    }
-                    """)
-                .when()
-                .post("/goods/add")
-                .then()
-                .statusCode(200);
+        createProduct("Яблоко", 100);
 
         given()
                 .baseUri("http://localhost:8080")
@@ -68,28 +55,14 @@ class GoodsListTest {
                 .get("/goods/list")
                 .then()
                 .statusCode(200)
-                .body("goods.name", hasItem("Test product 2"));
+                .body("goods.name", hasItem("Яблоко"));
     }
 
-    @Tag("api")
     @Test
+    @Tag("api")
     void addProductAssertJ() {
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .contentType("application/json")
-                .body("""
-                    {
-                      "name": "Test product 3",
-                      "price": 100
-                    }
-                    """)
-                .when()
-                .post("/goods/add")
-                .then()
-                .statusCode(200);
+        createProduct("Банан", 80);
 
         Response response = given()
                 .baseUri("http://localhost:8080")
@@ -100,8 +73,10 @@ class GoodsListTest {
                 .extract()
                 .response();
 
-        String productName = response.jsonPath().getString("goods[1].name");
+        String productNames = response.jsonPath()
+                .getString("goods.name");
 
-        assertThat(productName).isEqualTo("Test product 3");
+        assertThat(productNames)
+                .contains("Банан");
     }
 }
