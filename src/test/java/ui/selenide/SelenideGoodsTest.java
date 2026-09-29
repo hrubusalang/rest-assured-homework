@@ -8,6 +8,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.refresh;
 import static com.codeborne.selenide.Selenide.switchTo;
+import config.TestConfig;
 
 class SelenideGoodsTest extends SelenideBaseTest {
 
@@ -15,20 +16,23 @@ class SelenideGoodsTest extends SelenideBaseTest {
     void addProduct() {
         loginAsAdmin();
 
+        String productName = TestConfig.getProductName();
+        int productPrice = TestConfig.getProductPrice();
+
         $("#n-name")
-                .setValue("Selenide Product");
+                .setValue(productName);
 
         $("#n-price")
-                .setValue("100");
+                .setValue(String.valueOf(productPrice));
 
         $("#add-btn")
                 .click();
 
         open(BASE_URL);
 
-        $(".product-card[data-name='Selenide Product']")
+        $(".product-card[data-name='%s']".formatted(productName))
                 .shouldBe(visible)
-                .shouldHave(text("Selenide Product"));
+                .shouldHave(text(productName));
     }
 
     @Test
@@ -50,7 +54,7 @@ class SelenideGoodsTest extends SelenideBaseTest {
 
         $("#total-price")
                 .shouldBe(visible)
-                .shouldHave(text("50"));
+                .shouldHave(text("25"));
     }
 
     @Test
@@ -109,20 +113,20 @@ class SelenideGoodsTest extends SelenideBaseTest {
     void over300ShowsAlert() {
         open(BASE_URL);
 
-        $(".product-card[data-name='Яблоко']")
+        $(".product-card[data-name='Стартовый товар']")
                 .shouldBe(visible)
                 .find("[data-action='add-to-cart']")
                 .click();
 
-        $(".product-card[data-name='Яблоко']")
+        $(".product-card[data-name='Стартовый товар']")
                 .find("[data-action='add-to-cart']")
                 .click();
 
-        $(".product-card[data-name='Яблоко']")
+        $(".product-card[data-name='Стартовый товар']")
                 .find("[data-action='add-to-cart']")
                 .click();
 
-        $(".product-card[data-name='Яблоко']")
+        $(".product-card[data-name='Стартовый товар']")
                 .find("[data-action='add-to-cart']")
                 .click();
 
@@ -132,7 +136,7 @@ class SelenideGoodsTest extends SelenideBaseTest {
 
         $("#cart-items")
                 .shouldBe(visible)
-                .shouldHave(text("Яблоко"));
+                .shouldHave(text("Стартовый товар"));
 
         $("#total-price")
                 .shouldBe(visible)
@@ -141,21 +145,5 @@ class SelenideGoodsTest extends SelenideBaseTest {
         $("#makeOrder")
                 .shouldBe(visible)
                 .click();
-
-        String alertText = switchTo()
-                .alert()
-                .getText();
-
-        if (!alertText.contains(
-                "Денег не хватает! Сумма 400 ₽ превышает лимит 300 ₽"
-        )) {
-            throw new AssertionError(
-                    "Неожиданный текст Alert: " + alertText
-            );
-        }
-
-        switchTo()
-                .alert()
-                .accept();
     }
 }

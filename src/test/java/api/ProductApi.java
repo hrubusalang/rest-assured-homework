@@ -1,12 +1,14 @@
 package api;
 
+import config.TestConfig;
+
 import static io.restassured.RestAssured.given;
 
 public class ProductApi {
 
-    private static final String BASE_URL = "http://localhost:8080";
-    private static final String ADMIN_LOGIN = "admin";
-    private static final String ADMIN_PASSWORD = "secret123";
+    private static final String BASE_URL = TestConfig.getApiUrl();
+    private static final String ADMIN_LOGIN = TestConfig.getAdminLogin();
+    private static final String ADMIN_PASSWORD = TestConfig.getAdminPassword();
 
     public static int createProduct(String name, int price) {
         return given()
