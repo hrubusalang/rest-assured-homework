@@ -1,9 +1,8 @@
 package api;
 
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
 
 class GoodsPatchTest extends ApiBaseTest {
 
@@ -13,24 +12,16 @@ class GoodsPatchTest extends ApiBaseTest {
 
         int productId = createProduct("Груша", 120);
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .contentType("application/json")
-                .body("""
-                    {
-                      "name": "Персик",
-                      "price": 180
-                    }
-                    """)
-                .when()
-                .patch("/goods/" + productId)
-                .then()
-                .statusCode(200)
-                .body("id", org.hamcrest.Matchers.equalTo(productId))
-                .body("name", org.hamcrest.Matchers.equalTo("Персик"))
-                .body("price", org.hamcrest.Matchers.equalTo(180.0f));
+        Response response =
+                ProductApi.updateProduct(productId, "Персик", 180);
+
+        GoodsApiAssert.statusCodeIs(response, 200);
+        GoodsApiAssert.productIs(
+                response,
+                productId,
+                "Персик",
+                180
+        );
     }
 
     @Test
@@ -39,32 +30,21 @@ class GoodsPatchTest extends ApiBaseTest {
 
         int productId = createProduct("Апельсин", 130);
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .when()
-                .delete("/goods/" + productId)
-                .then()
-                .statusCode(200);
+        Response deleteResponse =
+                ProductApi.deleteProduct(productId);
+
+        GoodsApiAssert.statusCodeIs(deleteResponse, 200);
 
         createdProductIds.remove(Integer.valueOf(productId));
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .contentType("application/json")
-                .body("""
-                        {
-                          "name": "Мандарин",
-                          "price": 140
-                        }
-                        """)
-                .when()
-                .patch("/goods/" + productId)
-                .then()
-                .statusCode(404);
+        Response patchResponse =
+                ProductApi.updateProduct(
+                        productId,
+                        "Мандарин",
+                        140
+                );
+
+        GoodsApiAssert.statusCodeIs(patchResponse, 404);
     }
 
     @Test
@@ -73,20 +53,13 @@ class GoodsPatchTest extends ApiBaseTest {
 
         int productId = createProduct("Киви", 90);
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .contentType("application/json")
-                .body("""
-                        {
-                          "name": "Киви",
-                          "price": -100
-                        }
-                        """)
-                .when()
-                .patch("/goods/" + productId)
-                .then()
-                .statusCode(400);
+        Response response =
+                ProductApi.updateProduct(
+                        productId,
+                        "Киви",
+                        -100
+                );
+
+        GoodsApiAssert.statusCodeIs(response, 400);
     }
 }

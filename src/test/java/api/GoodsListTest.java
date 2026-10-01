@@ -1,13 +1,8 @@
 package api;
 
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 
 class GoodsListTest extends ApiBaseTest {
 
@@ -17,13 +12,10 @@ class GoodsListTest extends ApiBaseTest {
 
         createProduct("Хлеб", 50);
 
-        given()
-                .baseUri("http://localhost:8080")
-                .when()
-                .get("/goods/list")
-                .then()
-                .statusCode(200)
-                .body("goods.name", hasItem("Хлеб"));
+        Response response = ProductApi.getProducts();
+
+        GoodsApiAssert.statusCodeIs(response, 200);
+        GoodsApiAssert.productListContains(response, "Хлеб");
     }
 
     @Test
@@ -32,15 +24,10 @@ class GoodsListTest extends ApiBaseTest {
 
         createProduct("Слива", 150);
 
-        RequestSpecification requestSpecification = given()
-                .baseUri("http://localhost:8080");
+        Response response = ProductApi.getProducts();
 
-        given(requestSpecification)
-                .when()
-                .get("/goods/list")
-                .then()
-                .statusCode(200)
-                .body("goods.name", hasItem("Слива"));
+        GoodsApiAssert.statusCodeIs(response, 200);
+        GoodsApiAssert.productListContains(response, "Слива");
     }
 
     @Test
@@ -49,13 +36,10 @@ class GoodsListTest extends ApiBaseTest {
 
         createProduct("Яблоко", 100);
 
-        given()
-                .baseUri("http://localhost:8080")
-                .when()
-                .get("/goods/list")
-                .then()
-                .statusCode(200)
-                .body("goods.name", hasItem("Яблоко"));
+        Response response = ProductApi.getProducts();
+
+        GoodsApiAssert.statusCodeIs(response, 200);
+        GoodsApiAssert.productListContains(response, "Яблоко");
     }
 
     @Test
@@ -64,19 +48,9 @@ class GoodsListTest extends ApiBaseTest {
 
         createProduct("Банан", 80);
 
-        Response response = given()
-                .baseUri("http://localhost:8080")
-                .when()
-                .get("/goods/list")
-                .then()
-                .statusCode(200)
-                .extract()
-                .response();
+        Response response = ProductApi.getProducts();
 
-        String productNames = response.jsonPath()
-                .getString("goods.name");
-
-        assertThat(productNames)
-                .contains("Банан");
+        GoodsApiAssert.statusCodeIs(response, 200);
+        GoodsApiAssert.productListContains(response, "Банан");
     }
 }

@@ -1,9 +1,8 @@
 package api;
 
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
 
 class GoodsDeleteTest extends ApiBaseTest {
 
@@ -13,14 +12,9 @@ class GoodsDeleteTest extends ApiBaseTest {
 
         int productId = createProduct("Яблоко", 100);
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .when()
-                .delete("/goods/" + productId)
-                .then()
-                .statusCode(200);
+        Response response = ProductApi.deleteProduct(productId);
+
+        GoodsApiAssert.statusCodeIs(response, 200);
 
         createdProductIds.remove(Integer.valueOf(productId));
     }
@@ -31,24 +25,15 @@ class GoodsDeleteTest extends ApiBaseTest {
 
         int productId = createProduct("Банан", 80);
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .when()
-                .delete("/goods/" + productId)
-                .then()
-                .statusCode(200);
+        Response deleteResponse = ProductApi.deleteProduct(productId);
+
+        GoodsApiAssert.statusCodeIs(deleteResponse, 200);
 
         createdProductIds.remove(Integer.valueOf(productId));
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .when()
-                .delete("/goods/" + productId)
-                .then()
-                .statusCode(404);
+        Response secondDeleteResponse =
+                ProductApi.deleteProduct(productId);
+
+        GoodsApiAssert.statusCodeIs(secondDeleteResponse, 404);
     }
 }

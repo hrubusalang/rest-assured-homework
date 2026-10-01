@@ -1,6 +1,8 @@
 package ui.selenide;
 
+import com.codeborne.selenide.logevents.SelenideLogger;
 import config.TestConfig;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -19,6 +21,13 @@ public class SelenideBaseTest {
     @BeforeEach
     void setUp() {
         timeout = TestConfig.getTimeout();
+
+        SelenideLogger.addListener(
+                "AllureSelenide",
+                new AllureSelenide()
+                        .screenshots(true)
+                        .savePageSource(true)
+        );
 
         System.out.println("=== Test configuration ===");
         System.out.println("Base URL: " + TestConfig.getBaseUrl());

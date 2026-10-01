@@ -1,6 +1,7 @@
 package ui.selenide.pages;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -22,11 +23,13 @@ public class ProductsPage {
         this.baseUrl = baseUrl;
     }
 
+    @Step("Открыть страницу товаров")
     public ProductsPage openPage() {
         open(baseUrl);
         return this;
     }
 
+    @Step("Добавить товар в корзину: {productName}")
     public ProductsPage addProductToCart(String productName) {
         $(".product-card[data-name='%s']".formatted(productName))
                 .find("[data-action='add-to-cart']")
@@ -35,16 +38,19 @@ public class ProductsPage {
         return this;
     }
 
+    @Step("Открыть корзину")
     public ProductsPage openCart() {
         openCartButton.click();
         return this;
     }
 
+    @Step("Оформить заказ")
     public ProductsPage makeOrder() {
         makeOrderButton.click();
         return this;
     }
 
+    @Step("Обновить страницу товаров")
     public ProductsPage refreshPage() {
         refresh();
         return this;

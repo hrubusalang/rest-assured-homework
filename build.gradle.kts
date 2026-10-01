@@ -10,12 +10,13 @@ repositories {
 }
 
 dependencies {
+    // JUnit 5
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
 
-    // Rest Assured — наше предыдущее ДЗ
+    // Rest Assured
     testImplementation("io.rest-assured:rest-assured:5.5.1")
 
-    // AssertJ — наше предыдущее ДЗ
+    // AssertJ
     testImplementation("org.assertj:assertj-core:3.27.3")
 
     // Selenium
@@ -24,11 +25,17 @@ dependencies {
     // Selenide
     testImplementation("com.codeborne:selenide:7.9.3")
 
+    // Allure
+    testImplementation("io.qameta.allure:allure-junit5:2.29.1")
+    testImplementation("io.qameta.allure:allure-selenide:2.29.1")
+    testImplementation("io.qameta.allure:allure-rest-assured:2.29.1")
+
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
     useJUnitPlatform()
+
     testLogging {
         showStandardStreams = true
     }

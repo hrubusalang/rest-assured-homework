@@ -1,5 +1,6 @@
 package ui.selenide.asserts;
 
+import io.qameta.allure.Step;
 import ui.selenide.pages.AdminPage;
 
 import static com.codeborne.selenide.Condition.text;
@@ -13,6 +14,7 @@ public class AdminPageAssert {
         this.adminPage = adminPage;
     }
 
+    @Step("Проверить, что поле названия товара отображается")
     public AdminPageAssert productNameInputIsVisible() {
         adminPage.getProductNameInput()
                 .shouldBe(visible);
@@ -20,6 +22,7 @@ public class AdminPageAssert {
         return this;
     }
 
+    @Step("Проверить, что поле цены товара отображается")
     public AdminPageAssert productPriceInputIsVisible() {
         adminPage.getProductPriceInput()
                 .shouldBe(visible);
@@ -27,6 +30,7 @@ public class AdminPageAssert {
         return this;
     }
 
+    @Step("Проверить, что кнопка добавления товара отображается")
     public AdminPageAssert addProductButtonIsVisible() {
         adminPage.getAddProductButton()
                 .shouldBe(visible);
@@ -34,6 +38,7 @@ public class AdminPageAssert {
         return this;
     }
 
+    @Step("Проверить уведомление об успешном добавлении товара")
     public AdminPageAssert productAddedNotificationIsVisible() {
         adminPage.getNotification()
                 .shouldBe(visible)
@@ -42,6 +47,7 @@ public class AdminPageAssert {
         return this;
     }
 
+    @Step("Проверить уведомление об успешном обновлении товара")
     public AdminPageAssert productUpdatedNotificationIsVisible() {
         adminPage.getNotification()
                 .shouldBe(visible)

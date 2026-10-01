@@ -1,9 +1,8 @@
 package api;
 
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
 
 class GoodsAddTest extends ApiBaseTest {
 
@@ -13,14 +12,9 @@ class GoodsAddTest extends ApiBaseTest {
 
         int productId = createProduct("Хлеб", 50);
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .when()
-                .get("/goods/" + productId)
-                .then()
-                .statusCode(200);
+        Response response = ProductApi.getProduct(productId);
+
+        GoodsApiAssert.statusCodeIs(response, 200);
     }
 
     @Test
@@ -29,20 +23,8 @@ class GoodsAddTest extends ApiBaseTest {
 
         createProduct("Слива", 150);
 
-        given()
-                .baseUri("http://localhost:8080")
-                .auth()
-                .basic("admin", "secret123")
-                .contentType("application/json")
-                .body("""
-                        {
-                          "name": "Слива",
-                          "price": 150
-                        }
-                        """)
-                .when()
-                .post("/goods/add")
-                .then()
-                .statusCode(400);
+        Response response = ProductApi.addProduct("Слива", 150);
+
+        GoodsApiAssert.statusCodeIs(response, 400);
     }
 }

@@ -1,6 +1,7 @@
 package ui.selenide.pages;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -17,25 +18,30 @@ public class LoginPage {
         this.baseUrl = baseUrl;
     }
 
+    @Step("Открыть страницу авторизации")
     public LoginPage openPage() {
         open(baseUrl + "/login");
         return this;
     }
 
+    @Step("Ввести логин: {username}")
     public LoginPage setUsername(String username) {
         usernameInput.setValue(username);
         return this;
     }
 
+    @Step("Ввести пароль")
     public LoginPage setPassword(String password) {
         passwordInput.setValue(password);
         return this;
     }
 
+    @Step("Нажать кнопку Login")
     public void clickLoginButton() {
         loginButton.click();
     }
 
+    @Step("Авторизоваться под пользователем: {username}")
     public void login(String username, String password) {
         setUsername(username);
         setPassword(password);

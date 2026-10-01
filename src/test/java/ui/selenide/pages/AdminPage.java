@@ -1,6 +1,7 @@
 package ui.selenide.pages;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Selenide.$;
 
@@ -11,21 +12,25 @@ public class AdminPage {
     private final SelenideElement addProductButton = $("#add-btn");
     private final SelenideElement notification = $(".toast");
 
+    @Step("Ввести название товара: {productName}")
     public AdminPage setProductName(String productName) {
         productNameInput.setValue(productName);
         return this;
     }
 
+    @Step("Ввести цену товара: {productPrice}")
     public AdminPage setProductPrice(int productPrice) {
         productPriceInput.setValue(String.valueOf(productPrice));
         return this;
     }
 
+    @Step("Нажать кнопку добавления товара")
     public AdminPage clickAddProductButton() {
         addProductButton.click();
         return this;
     }
 
+    @Step("Добавить товар: {productName}, цена: {productPrice}")
     public AdminPage addProduct(String productName, int productPrice) {
         return setProductName(productName)
                 .setProductPrice(productPrice)
@@ -37,6 +42,7 @@ public class AdminPage {
                 .closest("tr");
     }
 
+    @Step("Изменить товар {currentProductName} на {newProductName}, цена: {newPrice}")
     public AdminPage editProduct(
             String currentProductName,
             String newProductName,

@@ -1,5 +1,6 @@
 package ui.selenide.asserts;
 
+import io.qameta.allure.Step;
 import ui.selenide.pages.ProductsPage;
 
 import static com.codeborne.selenide.Condition.text;
@@ -13,6 +14,7 @@ public class ProductsPageAssert {
         this.productsPage = productsPage;
     }
 
+    @Step("Проверить, что товар отображается: {productName}")
     public ProductsPageAssert productIsVisible(String productName) {
         productsPage.getProductCard(productName)
                 .shouldBe(visible)
@@ -21,6 +23,7 @@ public class ProductsPageAssert {
         return this;
     }
 
+    @Step("Проверить количество товаров в корзине: {expectedCount}")
     public ProductsPageAssert cartCountIs(String expectedCount) {
         productsPage.getCartCount()
                 .shouldBe(visible)
@@ -29,6 +32,7 @@ public class ProductsPageAssert {
         return this;
     }
 
+    @Step("Проверить, что кнопка открытия корзины отображается")
     public ProductsPageAssert openCartButtonIsVisible() {
         productsPage.getOpenCartButton()
                 .shouldBe(visible);
@@ -36,6 +40,7 @@ public class ProductsPageAssert {
         return this;
     }
 
+    @Step("Проверить, что корзина содержит товар: {productName}")
     public ProductsPageAssert cartContainsProduct(String productName) {
         productsPage.getCartItems()
                 .shouldBe(visible)
@@ -44,6 +49,7 @@ public class ProductsPageAssert {
         return this;
     }
 
+    @Step("Проверить итоговую стоимость корзины: {expectedPrice}")
     public ProductsPageAssert totalPriceIs(int expectedPrice) {
         productsPage.getTotalPrice()
                 .shouldBe(visible)
@@ -52,6 +58,7 @@ public class ProductsPageAssert {
         return this;
     }
 
+    @Step("Проверить, что кнопка оформления заказа отображается")
     public ProductsPageAssert makeOrderButtonIsVisible() {
         productsPage.getMakeOrderButton()
                 .shouldBe(visible);
@@ -59,6 +66,7 @@ public class ProductsPageAssert {
         return this;
     }
 
+    @Step("Проверить уведомление об успешном оформлении заказа")
     public ProductsPageAssert orderNotificationIsVisible() {
         productsPage.getOrderNotification()
                 .shouldBe(visible)
