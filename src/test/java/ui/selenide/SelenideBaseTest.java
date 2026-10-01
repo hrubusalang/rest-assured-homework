@@ -40,16 +40,9 @@ public class SelenideBaseTest {
     protected void loginAsAdmin() {
         open(BASE_URL + "/login");
 
-        $("#username")
-                .setValue(ADMIN_LOGIN);
-
-        $("#password")
-                .setValue(ADMIN_PASSWORD);
-
-        $("button[type='submit']")
-                .click();
-
-        $("#n-name")
-                .shouldBe(visible);
+        $("#username").setValue(ADMIN_LOGIN);
+        $("#password").setValue(ADMIN_PASSWORD);
+        $("button[type='submit']").click();
+        $("#n-name").shouldBe(visible);
     }
 }

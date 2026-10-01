@@ -1,16 +1,43 @@
 package ui.selenide;
 
+import config.TestConfig;
 import org.junit.jupiter.api.Test;
+import ui.selenide.asserts.AdminPageAssert;
+import ui.selenide.asserts.ProductsPageAssert;
+import ui.selenide.pages.AdminPage;
+import ui.selenide.pages.LoginPage;
+import ui.selenide.pages.ProductsPage;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.refresh;
-import static com.codeborne.selenide.Selenide.switchTo;
-import config.TestConfig;
 
 class SelenideGoodsTest extends SelenideBaseTest {
+
+    @Test
+    void shouldMakeOrderWithThreeProducts() {
+        ProductsPage productsPage = new ProductsPage(BASE_URL);
+        ProductsPageAssert productsPageAssert =
+                new ProductsPageAssert(productsPage);
+
+        productsPage
+                .openPage()
+                .addProductToCart("Хлеб")
+                .addProductToCart("Хлеб")
+                .addProductToCart("Хлеб")
+                .openCart();
+
+        productsPageAssert
+                .cartContainsProduct("Хлеб")
+                .totalPriceIs(75)
+                .makeOrderButtonIsVisible();
+
+        productsPage.makeOrder();
+
+        productsPageAssert.orderNotificationIsVisible();
+    }
 
     @Test
     void addProduct() {
@@ -145,5 +172,71 @@ class SelenideGoodsTest extends SelenideBaseTest {
         $("#makeOrder")
                 .shouldBe(visible)
                 .click();
+    }
+
+    @Test
+    void shouldCalculateTotalPriceForDifferentProducts() {
+        ProductsPage productsPage = new ProductsPage(BASE_URL);
+        ProductsPageAssert productsPageAssert =
+                new ProductsPageAssert(productsPage);
+
+        productsPage
+                .openPage()
+                .addProductToCart("Хлеб")
+                .addProductToCart("Молоко")
+                .addProductToCart("Сыр")
+                .openCart();
+
+        productsPageAssert
+                .cartContainsProduct("Хлеб")
+                .cartContainsProduct("Молоко")
+                .cartContainsProduct("Сыр")
+                .totalPriceIs(175);
+    }
+
+    @Test
+    void shouldAddProductAsAdmin() {
+        LoginPage loginPage = new LoginPage(BASE_URL);
+        AdminPage adminPage = new AdminPage();
+        AdminPageAssert adminPageAssert = new AdminPageAssert(adminPage);
+
+        loginPage
+                .openPage()
+                .login(ADMIN_LOGIN, ADMIN_PASSWORD);
+
+        adminPageAssert
+                .productNameInputIsVisible()
+                .productPriceInputIsVisible()
+                .addProductButtonIsVisible();
+
+        adminPage.addProduct("Новый товар", 80);
+
+        adminPageAssert.productAddedNotificationIsVisible();
+    }
+
+    @Test
+    void shouldEditProductAsAdmin() {
+        LoginPage loginPage = new LoginPage(BASE_URL);
+        AdminPage adminPage = new AdminPage();
+        AdminPageAssert adminPageAssert = new AdminPageAssert(adminPage);
+        ProductsPage productsPage = new ProductsPage(BASE_URL);
+        ProductsPageAssert productsPageAssert =
+                new ProductsPageAssert(productsPage);
+
+        loginPage
+                .openPage()
+                .login(ADMIN_LOGIN, ADMIN_PASSWORD);
+
+        adminPage.editProduct(
+                "Новый товар",
+                "Измененный товар",
+                90
+        );
+
+        adminPageAssert.productUpdatedNotificationIsVisible();
+
+        productsPage.openPage();
+
+        productsPageAssert.productIsVisible("Измененный товар");
     }
 }
