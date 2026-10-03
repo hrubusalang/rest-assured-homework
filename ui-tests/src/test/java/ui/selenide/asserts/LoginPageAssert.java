@@ -3,6 +3,7 @@ package ui.selenide.asserts;
 import io.qameta.allure.Step;
 import ui.selenide.pages.LoginPage;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Condition.visible;
 
@@ -18,7 +19,6 @@ public class LoginPageAssert {
     public LoginPageAssert usernameInputIsVisible() {
         loginPage.getUsernameInput()
                 .shouldBe(visible);
-
         return this;
     }
 
@@ -26,7 +26,6 @@ public class LoginPageAssert {
     public LoginPageAssert passwordInputIsVisible() {
         loginPage.getPasswordInput()
                 .shouldBe(visible);
-
         return this;
     }
 
@@ -34,7 +33,6 @@ public class LoginPageAssert {
     public LoginPageAssert loginButtonIsVisible() {
         loginPage.getLoginButton()
                 .shouldBe(visible);
-
         return this;
     }
 
@@ -42,7 +40,6 @@ public class LoginPageAssert {
     public LoginPageAssert usernameIs(String username) {
         loginPage.getUsernameInput()
                 .shouldHave(value(username));
-
         return this;
     }
 
@@ -50,7 +47,14 @@ public class LoginPageAssert {
     public LoginPageAssert passwordIs(String password) {
         loginPage.getPasswordInput()
                 .shouldHave(value(password));
+        return this;
+    }
 
+    @Step("Проверить сообщение о неверных учётных данных")
+    public LoginPageAssert invalidCredentialsMessageIsVisible() {
+        loginPage.getErrorMessage()
+                .shouldBe(visible)
+                .shouldHave(text("Неверные учетные данные пользователя"));
         return this;
     }
 }

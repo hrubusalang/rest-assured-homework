@@ -13,6 +13,7 @@ public class LoginPage {
     private final SelenideElement usernameInput = $("#username");
     private final SelenideElement passwordInput = $("#password");
     private final SelenideElement loginButton = $("button[type='submit']");
+    private final SelenideElement errorMessage = $(".alert.alert-danger");
 
     public LoginPage(String baseUrl) {
         this.baseUrl = baseUrl;
@@ -58,5 +59,9 @@ public class LoginPage {
 
     public SelenideElement getLoginButton() {
         return loginButton;
+    }
+
+    public SelenideElement getErrorMessage() {
+        return errorMessage;
     }
 }

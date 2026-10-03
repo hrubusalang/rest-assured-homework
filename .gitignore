@@ -41,3 +41,20 @@ bin/
 
 ### Mac OS ###
 .DS_Store.idea/
+
+# IntelliJ IDEA
+.idea/
+
+# Gradle
+.gradle/
+**/build/
+
+# Allure
+**/allure-results/
+**/allure-report/
+allure-report.zip
+
+# Local database
+data/
+*.mv.db
+*.trace.db
